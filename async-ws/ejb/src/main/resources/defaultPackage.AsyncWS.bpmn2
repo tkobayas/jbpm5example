@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.omg.org/bpmn20"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <process processType="Private" isExecutable="true" id="defaultPackage.AsyncWS" name="AsyncWS" tns:packageName="defaultPackage" >
+
+    <!-- nodes -->
+    <startEvent id="_59B02CF5-981F-4290-AF78-23C6482ACE9C" name="" />
+    <endEvent id="_809314B4-695F-4525-8684-1BC6670ED360" name="" />
+    <task id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" name="AsyncWS" tns:taskName="AsyncWS" >
+      <ioSpecification>
+        <dataInput id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput" name="TaskName" />
+        <inputSet>
+          <dataInputRefs>_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">AsyncWS</from>
+          <to xsi:type="tFormalExpression">_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+    </task>
+    <scriptTask id="_4" name="Script" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("the process is about to finish");</script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_4-_809314B4-695F-4525-8684-1BC6670ED360" sourceRef="_4" targetRef="_809314B4-695F-4525-8684-1BC6670ED360" />
+    <sequenceFlow id="_59B02CF5-981F-4290-AF78-23C6482ACE9C-_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" sourceRef="_59B02CF5-981F-4290-AF78-23C6482ACE9C" targetRef="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" />
+    <sequenceFlow id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7-_4" sourceRef="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" targetRef="_4" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="defaultPackage.AsyncWS" >
+      <bpmndi:BPMNShape bpmnElement="_59B02CF5-981F-4290-AF78-23C6482ACE9C" >
+        <dc:Bounds x="51" y="114" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_809314B4-695F-4525-8684-1BC6670ED360" >
+        <dc:Bounds x="421" y="117" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" >
+        <dc:Bounds x="150" y="98" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="312" y="117" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_4-_809314B4-695F-4525-8684-1BC6670ED360" >
+        <di:waypoint x="352" y="141" />
+        <di:waypoint x="445" y="141" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_59B02CF5-981F-4290-AF78-23C6482ACE9C-_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" >
+        <di:waypoint x="75" y="138" />
+        <di:waypoint x="200" y="138" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7-_4" >
+        <di:waypoint x="200" y="138" />
+        <di:waypoint x="352" y="141" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
