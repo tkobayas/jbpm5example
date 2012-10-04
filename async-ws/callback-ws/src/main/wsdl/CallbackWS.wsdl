@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="CallbackService" targetNamespace="http://callback.sample.com/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://callback.sample.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="CallbackImplService" targetNamespace="http://callback.sample.com/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://callback.sample.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<xs:schema elementFormDefault="unqualified" targetNamespace="http://callback.sample.com/" version="1.0" xmlns:tns="http://callback.sample.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="http://callback.sample.com/" version="1.0" xmlns:tns="http://callback.sample.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="resumeAsyncTask" type="tns:resumeAsyncTask" />
 <xs:element name="resumeAsyncTaskResponse" type="tns:resumeAsyncTaskResponse" />
 <xs:complexType name="resumeAsyncTask">
@@ -31,7 +31,7 @@
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="CallbackServiceSoapBinding" type="tns:Callback">
+  <wsdl:binding name="CallbackImplServiceSoapBinding" type="tns:Callback">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="resumeAsyncTask">
       <soap:operation soapAction="" style="document" />
@@ -43,8 +43,8 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="CallbackService">
-    <wsdl:port binding="tns:CallbackServiceSoapBinding" name="CallbackPort">
+  <wsdl:service name="CallbackImplService">
+    <wsdl:port binding="tns:CallbackImplServiceSoapBinding" name="CallbackImplPort">
       <soap:address location="http://127.0.0.1:8080/async-ws-callback/callback" />
     </wsdl:port>
   </wsdl:service>

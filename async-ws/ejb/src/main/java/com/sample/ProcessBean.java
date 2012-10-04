@@ -36,15 +36,18 @@ public class ProcessBean implements ProcessLocal {
 
         StatefulKnowledgeSession ksession = createKnowledgeSession();
 
+        System.out.println("ProcessBean : Starting a process instance");
+        
         // start a new process instance
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("myVariable", "John");
+        params.put("var1", "John");
+        params.put("var2", null);
         ProcessInstance processInstance = ksession.startProcess(
                 "defaultPackage.AsyncWS", params);
 
         long processInstanceId = processInstance.getId();
 
-        System.out.println("Process started ... : processInstanceId = "
+        System.out.println("ProcessBean : A process instance has started : processInstanceId = "
                 + processInstanceId);
 
         return processInstanceId;
@@ -87,8 +90,7 @@ public class ProcessBean implements ProcessLocal {
         StatefulKnowledgeSession ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(ksessionId, kbase, null, env);
         new JPAWorkingMemoryDbLogger(ksession);
         
-        System.out.println("You got response from Async Web Service : " + results.get("ResponseValue1"));
-        System.out.println("Now process is resuming...");
+        System.out.println("ProcessBean : Now process is resuming...");
         
         ksession.getWorkItemManager().completeWorkItem(workItemId, results);
     }

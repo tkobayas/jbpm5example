@@ -1,65 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.example</groupId>
-    <artifactId>async-ws</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>async-ws</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.example</groupId>
+  <artifactId>async-ws</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>async-ws</name>
 
-    <modules>
-        <module>ejb</module>
-        <module>ui-war</module>
-        <module>callback-ws</module>
-        <module>ear</module>
-        <module>service-ws</module>
-    </modules>
+  <modules>
+    <module>ejb</module>
+    <module>ui-war</module>
+    <module>callback-ws</module>
+    <module>ear</module>
+    <!-- <module>service-ws</module> --> <!-- avoid cyclic dependency -->
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <brms.library.dir>/home/tkobayas/usr/local/BRMS/530/brms-p-5.3.0.GA-deployable/jboss-brms-engine/binaries</brms.library.dir>
+    <jbossas.home>/home/tkobayas/jboss</jbossas.home>
   </properties>
 
-    <build>
-        <pluginManagement>
-        </pluginManagement>
-    </build>
+  <build>
+    <pluginManagement>
+    </pluginManagement>
+  </build>
 
-    <dependencyManagement>
-    </dependencyManagement>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven.java.net</id>
-            <name>Java.net Maven2 Repository</name>
-            <url>http://download.java.net/maven/2</url>
-        </pluginRepository>
-    </pluginRepositories>
+  <dependencyManagement>
+  </dependencyManagement>
+  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven.java.net</id>
+      <name>Java.net Maven2 Repository</name>
+      <url>http://download.java.net/maven/2</url>
+    </pluginRepository>
+  </pluginRepositories>
 
-    <!-- Meta information -->
+  <!-- Meta information -->
 
-    <description></description>
-    <url></url>
+  <description></description>
+  <url></url>
 
-    <developers>
-        <developer>
-            <id></id>
-            <name></name>
-            <roles>
-                <role></role>
-            </roles>
-            <url></url>
-        </developer>
-    </developers>
-    <contributors></contributors>
+  <developers>
+    <developer>
+      <id></id>
+      <name></name>
+      <roles>
+        <role></role>
+      </roles>
+      <url></url>
+    </developer>
+  </developers>
+  <contributors></contributors>
 
-    <ciManagement></ciManagement>
-    <issueManagement></issueManagement>
-    <distributionManagement></distributionManagement>
-    <scm></scm>
+  <ciManagement></ciManagement>
+  <issueManagement></issueManagement>
+  <distributionManagement></distributionManagement>
+  <scm></scm>
 
-    <licenses></licenses>
-    <mailingLists></mailingLists>
-    <organization></organization>
+  <licenses></licenses>
+  <mailingLists></mailingLists>
+  <organization></organization>
 
 </project>

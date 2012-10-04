@@ -12,7 +12,14 @@
              xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
              xmlns:tns="http://www.jboss.org/drools">
 
+  <itemDefinition id="_var1Item" structureRef="String" />
+  <itemDefinition id="_var2Item" structureRef="String" />
+
   <process processType="Private" isExecutable="true" id="defaultPackage.AsyncWS" name="AsyncWS" tns:packageName="defaultPackage" >
+
+    <!-- process variables -->
+    <property id="var1" itemSubjectRef="_var1Item"/>
+    <property id="var2" itemSubjectRef="_var2Item"/>
 
     <!-- nodes -->
     <startEvent id="_59B02CF5-981F-4290-AF78-23C6482ACE9C" name="" />
@@ -20,10 +27,12 @@
     <task id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7" name="AsyncWS" tns:taskName="AsyncWS" >
       <ioSpecification>
         <dataInput id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput" name="TaskName" />
+        <dataOutput id="_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_ResponseValue1Output" name="ResponseValue1" />
         <inputSet>
           <dataInputRefs>_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput</dataInputRefs>
         </inputSet>
         <outputSet>
+          <dataOutputRefs>_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_ResponseValue1Output</dataOutputRefs>
         </outputSet>
       </ioSpecification>
       <dataInputAssociation>
@@ -33,9 +42,14 @@
           <to xsi:type="tFormalExpression">_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_TaskNameInput</to>
         </assignment>
       </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_5AFB6A35-D4AB-44A3-8E22-E3DF9C921AB7_ResponseValue1Output</sourceRef>
+        <targetRef>var2</targetRef>
+      </dataOutputAssociation>
     </task>
     <scriptTask id="_4" name="Script" scriptFormat="http://www.java.com/java" >
-      <script>System.out.println("the process is about to finish");</script>
+      <script>System.out.println("Script Node : you can use the response value in the process : " + kcontext.getVariable("var1"));
+System.out.println("Script Node : the process is about to finish");</script>
     </scriptTask>
 
     <!-- connections -->
