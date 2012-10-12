@@ -10,6 +10,7 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 Currently these projects are focusing on JBoss BRMS 5.3.0. I may add some branches for other versions (e.g. jBPM 5.3.0)
 
 For repository setup, please refer to https://github.com/tkobayas/jbpm5example/blob/master/README.md
+* BUT * I have removed the local repository dependency for BRMS jars from this project. There are referenced by <systemPath> now.
 
 ### Steps to run
 - Edit $JBOSS_HOME/server/$PROFILE/deploy/jbpm-human-task.war/WEB-INF/web.xml to add sample users/groups for Human Task Service
@@ -29,6 +30,7 @@ For repository setup, please refer to https://github.com/tkobayas/jbpm5example/b
 ```
 
 - Start BRMS 5.3.0 standalone
+- Edit rewards-basic/pom.xml to change <jbossas.home> and <brms.library.dir> properties for your environment
 - mvn clean package
 - cp ear/target/rewards-basic-ear-1.0-SNAPSHOT.ear $JBOSS_HOME/server/$PROFILE/deploy
 - access to http://localhost:8080/rewards-basic/ with a browser

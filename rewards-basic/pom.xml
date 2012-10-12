@@ -13,6 +13,12 @@
         <module>ear</module>
     </modules>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <brms.library.dir>/home/tkobayas/usr/local/BRMS/530/brms-p-5.3.0.GA-deployable/jboss-brms-engine/binaries</brms.library.dir>
+    <jbossas.home>/home/tkobayas/jboss</jbossas.home>
+  </properties>
+
     <build>
         <pluginManagement>
         </pluginManagement>
