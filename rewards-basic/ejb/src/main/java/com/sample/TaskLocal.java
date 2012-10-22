@@ -12,4 +12,5 @@ public interface TaskLocal
 {
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception;
     public void approveTask(String actorId, long taskId) throws Exception;
+    public void approveAllTasks() throws Exception;
 }

@@ -54,6 +54,18 @@ public class TaskServlet extends HttpServlet {
                     .getRequestDispatcher("/index.jsp");
             dispatcher.forward(req, res);
             return;
+        } else if (cmd.equals("approveAll")) {
+            try {
+                taskService.approveAllTasks();
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
+            req.setAttribute("message", "All tasks approved");
+            ServletContext context = this.getServletContext();
+            RequestDispatcher dispatcher = context
+                    .getRequestDispatcher("/index.jsp");
+            dispatcher.forward(req, res);
+            return;
         }
 
     }

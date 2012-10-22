@@ -1,5 +1,7 @@
 package com.sample;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -103,6 +105,30 @@ public class TaskBean implements TaskLocal {
         kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"),
                 ResourceType.BPMN2);
         return kbuilder.newKnowledgeBase();
+    }
+
+    public void approveAllTasks() throws Exception {
+        
+        System.out.println("approveAllTasks:");
+        
+        kbase = readKnowledgeBase();
+        
+        StatefulKnowledgeSession ksession = createKnowledgeSession();
+        TaskService localTaskService = getTaskService(ksession);
+        
+        List<String> actors = Arrays.asList(new String[]{"john", "mary"});
+        
+        for (String actorId : actors) {
+            List<TaskSummary> list = localTaskService
+                    .getTasksAssignedAsPotentialOwner(actorId, "en-UK");
+            for (TaskSummary task : list) {
+                long taskId = task.getId();
+                System.out.println(" approveTask (taskId = " + taskId + ") by " + actorId);
+                localTaskService.start(taskId, actorId);
+                localTaskService.complete(taskId, actorId, null);
+            }
+        }
+
     }
 
 }
