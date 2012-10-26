@@ -38,7 +38,7 @@ public class TaskBean implements TaskLocal {
 
     @Resource
     private UserTransaction ut;
-    
+
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception {
 
         kbase = readKnowledgeBase();
@@ -46,14 +46,13 @@ public class TaskBean implements TaskLocal {
         StatefulKnowledgeSession ksession = createKnowledgeSession();
         TaskService localTaskService = getTaskService(ksession);
 
-        List<TaskSummary> list = localTaskService
-                .getTasksAssignedAsPotentialOwner(actorId, "en-UK");
+        List<TaskSummary> list = localTaskService.getTasksAssignedAsPotentialOwner(actorId, "en-UK");
 
         System.out.println("retrieveTaskList by " + actorId);
         for (TaskSummary task : list) {
             System.out.println(" task.getId() = " + task.getId());
         }
-        
+
         ksession.dispose();
 
         return list;
@@ -69,11 +68,10 @@ public class TaskBean implements TaskLocal {
         ut.begin();
 
         try {
-            System.out.println("approveTask (taskId = " + taskId + ") by "
-                    + actorId);
+            System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
             localTaskService.start(taskId, actorId);
             localTaskService.complete(taskId, actorId, null);
-            
+
             ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +81,6 @@ public class TaskBean implements TaskLocal {
             ksession.dispose();
         }
 
-
         return;
     }
 
@@ -91,8 +88,7 @@ public class TaskBean implements TaskLocal {
         Environment env = KnowledgeBaseFactory.newEnvironment();
         env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
 
-        StatefulKnowledgeSession ksession = JPAKnowledgeService
-                .newStatefulKnowledgeSession(kbase, null, env);
+        StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
 
         new JPAWorkingMemoryDbLogger(ksession);
 
@@ -101,17 +97,15 @@ public class TaskBean implements TaskLocal {
 
     private TaskService getTaskService(StatefulKnowledgeSession ksession) {
 
-        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(
-                emf, SystemEventListenerFactory.getSystemEventListener());
+        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
+                SystemEventListenerFactory.getSystemEventListener());
 
         LocalTaskService localTaskService = new LocalTaskService(taskService);
 
-        SyncWSHumanTaskHandler humanTaskHandler = new SyncWSHumanTaskHandler(
-                localTaskService, ksession);
+        SyncWSHumanTaskHandler humanTaskHandler = new SyncWSHumanTaskHandler(localTaskService, ksession);
         humanTaskHandler.setLocal(true);
         humanTaskHandler.connect();
-        ksession.getWorkItemManager().registerWorkItemHandler("Human Task",
-                humanTaskHandler);
+        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", humanTaskHandler);
 
         return localTaskService;
     }
@@ -122,11 +116,8 @@ public class TaskBean implements TaskLocal {
             return kbase;
         }
 
-        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
-                .newKnowledgeBuilder();
-        kbuilder.add(
-                ResourceFactory.newClassPathResource("rewards-basic.bpmn"),
-                ResourceType.BPMN2);
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"), ResourceType.BPMN2);
         return kbuilder.newKnowledgeBase();
     }
 

@@ -54,14 +54,12 @@ public class ProcessBean implements ProcessLocal {
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("recipient", recipient);
-            ProcessInstance processInstance = ksession.startProcess(
-                    "com.sample.rewards-basic", params);
+            ProcessInstance processInstance = ksession.startProcess("com.sample.rewards-basic", params);
 
             processInstanceId = processInstance.getId();
 
-            System.out.println("Process started ... : processInstanceId = "
-                    + processInstanceId);
-            
+            System.out.println("Process started ... : processInstanceId = " + processInstanceId);
+
             ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,22 +76,19 @@ public class ProcessBean implements ProcessLocal {
         Environment env = KnowledgeBaseFactory.newEnvironment();
         env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
 
-        StatefulKnowledgeSession ksession = JPAKnowledgeService
-                .newStatefulKnowledgeSession(kbase, null, env);
+        StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
 
         new JPAWorkingMemoryDbLogger(ksession);
 
-        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(
-                emf, SystemEventListenerFactory.getSystemEventListener());
+        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
+                SystemEventListenerFactory.getSystemEventListener());
 
         LocalTaskService localTaskService = new LocalTaskService(taskService);
 
-        SyncWSHumanTaskHandler humanTaskHandler = new SyncWSHumanTaskHandler(
-                localTaskService, ksession);
+        SyncWSHumanTaskHandler humanTaskHandler = new SyncWSHumanTaskHandler(localTaskService, ksession);
         humanTaskHandler.setLocal(true);
         humanTaskHandler.connect();
-        ksession.getWorkItemManager().registerWorkItemHandler("Human Task",
-                humanTaskHandler);
+        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", humanTaskHandler);
 
         return ksession;
     }
@@ -104,11 +99,8 @@ public class ProcessBean implements ProcessLocal {
             return kbase;
         }
 
-        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
-                .newKnowledgeBuilder();
-        kbuilder.add(
-                ResourceFactory.newClassPathResource("rewards-basic.bpmn"),
-                ResourceType.BPMN2);
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"), ResourceType.BPMN2);
         return kbuilder.newKnowledgeBase();
     }
 
