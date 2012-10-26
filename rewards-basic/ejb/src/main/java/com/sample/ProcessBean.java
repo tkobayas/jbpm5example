@@ -3,9 +3,13 @@ package com.sample;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.UserTransaction;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -24,12 +28,16 @@ import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class ProcessBean implements ProcessLocal {
 
     private static KnowledgeBase kbase;
 
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
+
+    @Resource
+    private UserTransaction ut;
 
     public long startProcess(String recipient) throws Exception {
 
@@ -38,16 +46,30 @@ public class ProcessBean implements ProcessLocal {
 
         StatefulKnowledgeSession ksession = createKnowledgeSession();
 
-        // start a new process instance
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("recipient", recipient);
-        ProcessInstance processInstance = ksession.startProcess(
-                "com.sample.rewards-basic", params);
+        long processInstanceId = -1;
 
-        long processInstanceId = processInstance.getId();
+        ut.begin();
 
-        System.out.println("Process started ... : processInstanceId = "
-                + processInstanceId);
+        try {
+            // start a new process instance
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("recipient", recipient);
+            ProcessInstance processInstance = ksession.startProcess(
+                    "com.sample.rewards-basic", params);
+
+            processInstanceId = processInstance.getId();
+
+            System.out.println("Process started ... : processInstanceId = "
+                    + processInstanceId);
+            
+            ut.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ut.rollback();
+            throw e;
+        } finally {
+            ksession.dispose();
+        }
 
         return processInstanceId;
     }
@@ -77,14 +99,15 @@ public class ProcessBean implements ProcessLocal {
     }
 
     private static KnowledgeBase readKnowledgeBase() throws Exception {
-        
+
         if (kbase != null) {
             return kbase;
         }
-        
+
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
                 .newKnowledgeBuilder();
-        kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"),
+        kbuilder.add(
+                ResourceFactory.newClassPathResource("rewards-basic.bpmn"),
                 ResourceType.BPMN2);
         return kbuilder.newKnowledgeBase();
     }
