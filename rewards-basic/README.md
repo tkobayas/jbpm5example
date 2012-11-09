@@ -7,10 +7,12 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 - LocalTaskService and SyncWSHumanTaskHandler
 - mvn building
 
+This application is so basic that it creates new ksession every time. I will write another examples for 'singleton ksession pattern' and 'ksession per process pattern'.  
+
 Currently these projects are focusing on JBoss BRMS 5.3.0. I may add some branches for other versions (e.g. jBPM 5.3.0)
 
 For repository setup, please refer to https://github.com/tkobayas/jbpm5example/blob/master/README.md
-* BUT * I have removed the local repository dependency for BRMS jars from this project. There are referenced by <systemPath> now.
+* BUT * I have removed the local repository dependency for BRMS jars from this project. There are referenced by <systemPath> now. So you don't have to set up repository.
 
 ### Steps to run
 - Edit $JBOSS_HOME/server/$PROFILE/deploy/jbpm-human-task.war/WEB-INF/web.xml to add sample users/groups for Human Task Service
