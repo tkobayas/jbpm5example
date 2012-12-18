@@ -1,5 +1,6 @@
 package com.sample;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -23,7 +24,11 @@ import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
+import org.jbpm.task.OrganizationalEntity;
+import org.jbpm.task.PeopleAssignments;
+import org.jbpm.task.Task;
 import org.jbpm.task.TaskService;
+import org.jbpm.task.User;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.local.LocalTaskService;
 
@@ -44,7 +49,7 @@ public class TaskBean implements TaskLocal {
         kbase = readKnowledgeBase();
 
         StatefulKnowledgeSession ksession = createKnowledgeSession();
-        TaskService localTaskService = getTaskService(ksession);
+        LocalTaskService localTaskService = getTaskService(ksession);
 
         List<TaskSummary> list = localTaskService.getTasksAssignedAsPotentialOwner(actorId, "en-UK");
 
@@ -61,13 +66,13 @@ public class TaskBean implements TaskLocal {
     public void approveTask(String actorId, long taskId) throws Exception {
 
         kbase = readKnowledgeBase();
-
-        StatefulKnowledgeSession ksession = createKnowledgeSession();
-        TaskService localTaskService = getTaskService(ksession);
-
-        ut.begin();
+        StatefulKnowledgeSession ksession = null;
 
         try {
+            ut.begin();
+            
+            ksession = createKnowledgeSession();
+            LocalTaskService localTaskService = getTaskService(ksession);
             System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
             localTaskService.start(taskId, actorId);
             localTaskService.complete(taskId, actorId, null);
@@ -78,7 +83,9 @@ public class TaskBean implements TaskLocal {
             ut.rollback();
             throw e;
         } finally {
-            ksession.dispose();
+            if (ksession != null) {
+                ksession.dispose();
+            }
         }
 
         return;
@@ -95,7 +102,7 @@ public class TaskBean implements TaskLocal {
         return ksession;
     }
 
-    private TaskService getTaskService(StatefulKnowledgeSession ksession) {
+    private LocalTaskService getTaskService(StatefulKnowledgeSession ksession) {
 
         org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
                 SystemEventListenerFactory.getSystemEventListener());
@@ -109,6 +116,18 @@ public class TaskBean implements TaskLocal {
 
         return localTaskService;
     }
+    
+    private LocalTaskService getTaskService() {
+        
+        // Use this method when you don't need ksession
+
+        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
+                SystemEventListenerFactory.getSystemEventListener());
+
+        LocalTaskService localTaskService = new LocalTaskService(taskService);
+
+        return localTaskService;
+    }
 
     private KnowledgeBase readKnowledgeBase() throws Exception {
 
@@ -119,6 +138,39 @@ public class TaskBean implements TaskLocal {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"), ResourceType.BPMN2);
         return kbuilder.newKnowledgeBase();
+    }
+
+    public void setNewPotentialOwners(long taskId) throws Exception {
+ 
+        try {
+            ut.begin();
+            
+            LocalTaskService localTaskService = getTaskService();
+            Task task = localTaskService.getTask(taskId);
+            List<OrganizationalEntity> newPotentialOwners = new ArrayList<OrganizationalEntity>();
+            PeopleAssignments pa = task.getPeopleAssignments();
+            System.out.println("setNewPotentialOwners : old = " + pa.getPotentialOwners());
+            newPotentialOwners.add(new User("Jabba Hutt"));
+            newPotentialOwners.add(new User("mary"));
+            pa.setPotentialOwners(newPotentialOwners);
+            System.out.println("setNewPotentialOwners : new = " + pa.getPotentialOwners());
+
+            ut.commit();
+            System.out.println("--- committed ---");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ut.rollback();
+            throw e;
+        }
+        
+        {
+            LocalTaskService localTaskService2 = getTaskService();
+            System.out.println("--- querying ---");
+            Task task = localTaskService2.getTask(taskId);
+            System.out.println("setNewPotentialOwners : confirm = " + task.getPeopleAssignments().getPotentialOwners());
+        }
+
+        return;
     }
 
 }

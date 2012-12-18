@@ -54,6 +54,20 @@ public class TaskServlet extends HttpServlet {
                     .getRequestDispatcher("/index.jsp");
             dispatcher.forward(req, res);
             return;
+        } else if (cmd.equals("newPO")) {
+            long taskId = Long.parseLong(req.getParameter("taskId"));
+            try {
+                taskService.setNewPotentialOwners(taskId);
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
+            req.setAttribute("message", "PotentialOwners of Task (id = " + taskId
+                    + ") has been modified");
+            ServletContext context = this.getServletContext();
+            RequestDispatcher dispatcher = context
+                    .getRequestDispatcher("/index.jsp");
+            dispatcher.forward(req, res);
+            return;
         }
 
     }

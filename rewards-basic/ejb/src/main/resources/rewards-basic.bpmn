@@ -23,15 +23,15 @@
       <ioSpecification>
         <dataInput id="_4_CommentInput" name="Comment" />
         <dataInput id="_4_SkippableInput" name="Skippable" />
-        <dataInput id="_4_TaskNameInput" name="TaskName" />
         <dataInput id="_4_ContentInput" name="Content" />
+        <dataInput id="_4_TaskNameInput" name="TaskName" />
         <dataInput id="_4_GroupIdInput" name="GroupId" />
         <dataInput id="_4_PriorityInput" name="Priority" />
         <inputSet>
           <dataInputRefs>_4_CommentInput</dataInputRefs>
           <dataInputRefs>_4_SkippableInput</dataInputRefs>
-          <dataInputRefs>_4_TaskNameInput</dataInputRefs>
           <dataInputRefs>_4_ContentInput</dataInputRefs>
+          <dataInputRefs>_4_TaskNameInput</dataInputRefs>
           <dataInputRefs>_4_GroupIdInput</dataInputRefs>
           <dataInputRefs>_4_PriorityInput</dataInputRefs>
         </inputSet>
@@ -53,17 +53,17 @@
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
-        <targetRef>_4_TaskNameInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">Approval by PM</from>
-          <to xsi:type="tFormalExpression">_4_TaskNameInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
         <targetRef>_4_ContentInput</targetRef>
         <assignment>
           <from xsi:type="tFormalExpression"></from>
           <to xsi:type="tFormalExpression">_4_ContentInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_TaskNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">Approval by PM</from>
+          <to xsi:type="tFormalExpression">_4_TaskNameInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -85,71 +85,9 @@
           <formalExpression>john</formalExpression>
         </resourceAssignmentExpression>
       </potentialOwner>
-    </userTask>
-    <userTask id="_5" name="Approval by HR" >
-      <ioSpecification>
-        <dataInput id="_5_CommentInput" name="Comment" />
-        <dataInput id="_5_SkippableInput" name="Skippable" />
-        <dataInput id="_5_TaskNameInput" name="TaskName" />
-        <dataInput id="_5_ContentInput" name="Content" />
-        <dataInput id="_5_GroupIdInput" name="GroupId" />
-        <dataInput id="_5_PriorityInput" name="Priority" />
-        <inputSet>
-          <dataInputRefs>_5_CommentInput</dataInputRefs>
-          <dataInputRefs>_5_SkippableInput</dataInputRefs>
-          <dataInputRefs>_5_TaskNameInput</dataInputRefs>
-          <dataInputRefs>_5_ContentInput</dataInputRefs>
-          <dataInputRefs>_5_GroupIdInput</dataInputRefs>
-          <dataInputRefs>_5_PriorityInput</dataInputRefs>
-        </inputSet>
-        <outputSet>
-        </outputSet>
-      </ioSpecification>
-      <dataInputAssociation>
-        <targetRef>_5_CommentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_5_CommentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_5_SkippableInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">false</from>
-          <to xsi:type="tFormalExpression">_5_SkippableInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_5_TaskNameInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">Approval by HR</from>
-          <to xsi:type="tFormalExpression">_5_TaskNameInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_5_ContentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_5_ContentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_5_GroupIdInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_5_GroupIdInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_5_PriorityInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_5_PriorityInput</to>
-        </assignment>
-      </dataInputAssociation>
       <potentialOwner>
         <resourceAssignmentExpression>
-          <formalExpression>mary</formalExpression>
+          <formalExpression> mary</formalExpression>
         </resourceAssignmentExpression>
       </potentialOwner>
     </userTask>
@@ -160,8 +98,7 @@
     <!-- connections -->
     <sequenceFlow id="_6-_3" sourceRef="_6" targetRef="_3" />
     <sequenceFlow id="_1-_4" sourceRef="_1" targetRef="_4" />
-    <sequenceFlow id="_4-_5" sourceRef="_4" targetRef="_5" />
-    <sequenceFlow id="_5-_6" sourceRef="_5" targetRef="_6" />
+    <sequenceFlow id="_4-_6" sourceRef="_4" targetRef="_6" />
 
   </process>
 
@@ -176,9 +113,6 @@
       <bpmndi:BPMNShape bpmnElement="_4" >
         <dc:Bounds x="96" y="16" width="144" height="48" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_5" >
-        <dc:Bounds x="289" y="15" width="133" height="48" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_6" >
         <dc:Bounds x="461" y="17" width="80" height="48" />
       </bpmndi:BPMNShape>
@@ -190,12 +124,8 @@
         <di:waypoint x="40" y="40" />
         <di:waypoint x="168" y="40" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_4-_5" >
+      <bpmndi:BPMNEdge bpmnElement="_4-_6" >
         <di:waypoint x="168" y="40" />
-        <di:waypoint x="355" y="39" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_5-_6" >
-        <di:waypoint x="355" y="39" />
         <di:waypoint x="501" y="41" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

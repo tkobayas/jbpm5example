@@ -44,13 +44,17 @@ public class ProcessBean implements ProcessLocal {
         // load up the knowledge base
         kbase = readKnowledgeBase();
 
-        StatefulKnowledgeSession ksession = createKnowledgeSession();
+        StatefulKnowledgeSession ksession = null;
 
         long processInstanceId = -1;
 
-        ut.begin();
+        
 
         try {
+            ut.begin();
+            
+            ksession = createKnowledgeSession();
+            
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("recipient", recipient);
@@ -66,7 +70,9 @@ public class ProcessBean implements ProcessLocal {
             ut.rollback();
             throw e;
         } finally {
-            ksession.dispose();
+            if (ksession != null) {
+                ksession.dispose();
+            }
         }
 
         return processInstanceId;
