@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,13 +31,15 @@ import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
-//@TransactionManagement(TransactionManagementType.BEAN)
 public class ProcessBean implements ProcessLocal {
 
     private static KnowledgeBase kbase;
 
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
+    
+    @EJB
+    private TxProcessLocal txProcessBean;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public long startProcess(String recipient) throws Exception {
@@ -44,30 +47,17 @@ public class ProcessBean implements ProcessLocal {
         // load up the knowledge base
         kbase = readKnowledgeBase();
 
+        // create and dispose ksession outside of transaction
         StatefulKnowledgeSession ksession = createKnowledgeSession();
 
         long processInstanceId = -1;
 
         try {
-            processInstanceId = doStartProcess(recipient, ksession);
+            // do work in a transaction
+            processInstanceId = txProcessBean.startProcess(recipient, ksession);
         } finally {
             ksession.dispose();
         }
-
-        return processInstanceId;
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private long doStartProcess(String recipient, StatefulKnowledgeSession ksession) {
-        long processInstanceId;
-        // start a new process instance
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("recipient", recipient);
-        ProcessInstance processInstance = ksession.startProcess("com.sample.rewards-basic", params);
-
-        processInstanceId = processInstance.getId();
-
-        System.out.println("Process started ... : processInstanceId = " + processInstanceId);
 
         return processInstanceId;
     }
