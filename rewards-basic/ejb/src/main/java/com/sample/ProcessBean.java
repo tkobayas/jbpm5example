@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManagerFactory;
@@ -28,7 +30,7 @@ import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+//@TransactionManagement(TransactionManagementType.BEAN)
 public class ProcessBean implements ProcessLocal {
 
     private static KnowledgeBase kbase;
@@ -36,9 +38,7 @@ public class ProcessBean implements ProcessLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
-
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public long startProcess(String recipient) throws Exception {
 
         // load up the knowledge base
@@ -48,26 +48,26 @@ public class ProcessBean implements ProcessLocal {
 
         long processInstanceId = -1;
 
-        ut.begin();
-
         try {
-            // start a new process instance
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("recipient", recipient);
-            ProcessInstance processInstance = ksession.startProcess("com.sample.rewards-basic", params);
-
-            processInstanceId = processInstance.getId();
-
-            System.out.println("Process started ... : processInstanceId = " + processInstanceId);
-
-            ut.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ut.rollback();
-            throw e;
+            processInstanceId = doStartProcess(recipient, ksession);
         } finally {
             ksession.dispose();
         }
+
+        return processInstanceId;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    private long doStartProcess(String recipient, StatefulKnowledgeSession ksession) {
+        long processInstanceId;
+        // start a new process instance
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("recipient", recipient);
+        ProcessInstance processInstance = ksession.startProcess("com.sample.rewards-basic", params);
+
+        processInstanceId = processInstance.getId();
+
+        System.out.println("Process started ... : processInstanceId = " + processInstanceId);
 
         return processInstanceId;
     }
