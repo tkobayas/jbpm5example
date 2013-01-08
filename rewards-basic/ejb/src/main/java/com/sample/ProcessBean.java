@@ -5,8 +5,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
@@ -28,7 +31,7 @@ import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+//@TransactionManagement(TransactionManagementType.BEAN)
 public class ProcessBean implements ProcessLocal {
 
     private static KnowledgeBase kbase;
@@ -36,9 +39,10 @@ public class ProcessBean implements ProcessLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
+    //@Resource
+    //private UserTransaction ut;
 
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public long startProcess(String recipient) throws Exception {
 
         // load up the knowledge base
@@ -47,6 +51,9 @@ public class ProcessBean implements ProcessLocal {
         StatefulKnowledgeSession ksession = createKnowledgeSession();
 
         long processInstanceId = -1;
+        
+        InitialContext ic = new InitialContext();
+        UserTransaction ut = (UserTransaction)ic.lookup("UserTransaction");
 
         ut.begin();
 
