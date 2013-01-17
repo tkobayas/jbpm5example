@@ -39,3 +39,5 @@ For repository setup, please refer to https://github.com/tkobayas/jbpm5example/b
  - [Start Reward Process] is to start a new process
  - [John's Task] is to list John's tasks and approve them
  - [Mary's Task] is to list Mary's tasks and approve them
+ 
+- reward-basic.jmx is a jmeter test plan for this application.
