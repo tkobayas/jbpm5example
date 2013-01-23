@@ -41,3 +41,5 @@ For repository setup, please refer to https://github.com/tkobayas/jbpm5example/b
  - [Mary's Task] is to list Mary's tasks and approve them
  
 - reward-basic.jmx is a jmeter test plan for this application.
+ - You may see PermissionDeniedException or OptimisticLockException under load. It means that a user started a task which is already completed. It's expected because this test plan may cause concurrent accesses to the same task with the same user. (It may happen in real use cases)
+ 
