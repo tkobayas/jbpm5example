@@ -9,6 +9,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
 import org.drools.KnowledgeBase;
@@ -63,7 +64,9 @@ public class ProcessBean implements ProcessLocal {
             ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            ut.rollback();
+            if (ut.getStatus() == Status.STATUS_ACTIVE) {
+                ut.rollback();
+            }
             throw e;
         } finally {
             ksession.dispose();
