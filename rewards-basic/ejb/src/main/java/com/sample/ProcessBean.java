@@ -26,6 +26,8 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
+import org.jbpm.task.service.DefaultUserGroupCallbackImpl;
+import org.jbpm.task.service.UserGroupCallbackManager;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
@@ -41,6 +43,9 @@ public class ProcessBean implements ProcessLocal {
     private UserTransaction ut;
 
     public long startProcess(String recipient) throws Exception {
+
+        // Use this when you want to ignore user existence issues
+        UserGroupCallbackManager.getInstance().setCallback(new DefaultUserGroupCallbackImpl());
 
         // load up the knowledge base
         kbase = readKnowledgeBase();
