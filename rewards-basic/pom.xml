@@ -15,7 +15,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <brms.library.dir>/home/tkobayas/usr/local/BRMS/531/brms-p-5.3.1.GA-deployable/jboss-jbpm-engine</brms.library.dir>
   </properties>
 
     <build>
