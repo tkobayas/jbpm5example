@@ -39,9 +39,6 @@ public class ProcessBean implements ProcessLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
-
     public long startProcess(String recipient) throws Exception {
 
         // Use this when you want to ignore user existence issues
@@ -54,8 +51,6 @@ public class ProcessBean implements ProcessLocal {
 
         long processInstanceId = -1;
 
-        ut.begin();
-
         try {
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
@@ -66,12 +61,8 @@ public class ProcessBean implements ProcessLocal {
 
             System.out.println("Process started ... : processInstanceId = " + processInstanceId);
 
-            ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
             throw e;
         } finally {
             ksession.dispose();

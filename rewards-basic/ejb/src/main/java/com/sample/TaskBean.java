@@ -40,9 +40,6 @@ public class TaskBean implements TaskLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
-
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception {
 
         kbase = readKnowledgeBase();
@@ -69,41 +66,14 @@ public class TaskBean implements TaskLocal {
         StatefulKnowledgeSession ksession = createKnowledgeSession();
         TaskService localTaskService = getTaskService(ksession);
 
-        ut.begin();
-
         try {
             System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
             localTaskService.start(taskId, actorId);
             localTaskService.complete(taskId, actorId, null);
 
-            //Thread.sleep(10000); // To test OptimisticLockException
-
-            ut.commit();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-            Throwable cause = e.getCause();
-            if (cause != null && cause instanceof OptimisticLockException) {
-                // Concurrent access to the same process instance
-                throw new ProcessOperationException("The same process instance has likely been accessed concurrently",
-                        e);
-            }
-            throw new RuntimeException(e);
-        } catch (PermissionDeniedException e) {
-            e.printStackTrace();
-            // Transaction might be already rolled back by TaskServiceSession
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
-            // Probably the task has already been started by other users
-            throw new ProcessOperationException("The task (id = " + taskId
-                    + ") has likely been started by other users ", e);
         } catch (Exception e) {
             e.printStackTrace();
-            // Transaction might be already rolled back by TaskServiceSession
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
-            throw new RuntimeException(e);
+            throw e;
         } finally {
             ksession.dispose();
         }

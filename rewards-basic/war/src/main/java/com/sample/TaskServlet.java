@@ -44,11 +44,7 @@ public class TaskServlet extends HttpServlet {
             try {
                 taskService.approveTask(user, taskId);
                 message = "Task (id = " + taskId + ") has been completed by " + user;
-            } catch (ProcessOperationException e) {
-                // Recoverable exception
-                message = "Task operation failed. Please retry : " + e.getMessage();
             } catch (Exception e) {
-                // Unexpected exception
                 throw new ServletException(e);
             }
             req.setAttribute("message", message);
