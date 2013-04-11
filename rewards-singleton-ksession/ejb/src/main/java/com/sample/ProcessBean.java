@@ -12,6 +12,8 @@ import javax.transaction.UserTransaction;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.jbpm.task.TaskService;
+import org.jbpm.task.service.DefaultUserGroupCallbackImpl;
+import org.jbpm.task.service.UserGroupCallbackManager;
 
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -21,6 +23,9 @@ public class ProcessBean implements ProcessLocal {
     private UserTransaction ut;
 
     public long startProcess(String recipient) throws Exception {
+
+        // Use this when you want to ignore user existence issues
+        UserGroupCallbackManager.getInstance().setCallback(new DefaultUserGroupCallbackImpl());
 
         StatefulKnowledgeSession ksession = JbpmUtil.getKnowledgeSession();
 
