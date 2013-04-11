@@ -22,7 +22,6 @@ public class ProcessBean implements ProcessLocal {
 
     public long startProcess(String recipient) throws Exception {
 
-        // load up the knowledge base
         StatefulKnowledgeSession ksession = JbpmUtil.getKnowledgeSession();
 
         TaskService localTaskService = JbpmUtil.getLocalTaskService();

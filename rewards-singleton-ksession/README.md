@@ -5,9 +5,10 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 - Human Task
 - Persistence
 - LocalTaskService and SyncWSHumanTaskHandler
+- singleton ksession pattern
 - mvn building
 
-This application is an example of 'singleton ksession pattern' but having a serious problem that LocalTaskService is not thread-safe. So currently this example synchronizes the use of localTaskService. It throws away the advantage where ksession is thread-safe. Probably I should improve this example somehow.
+This application is an example of 'singleton ksession pattern'. As LocalTaskService is not thread-safe, each method is required to synchronize the use of localTaskService. You may encapsulate the logic with a utility class.
 
 ### Steps to run
 - Edit $JBOSS_HOME/server/$PROFILE/deploy/jbpm-human-task.war/WEB-INF/web.xml to add sample users/groups for Human Task Service

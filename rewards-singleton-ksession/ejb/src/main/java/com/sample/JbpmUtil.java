@@ -37,7 +37,7 @@ public class JbpmUtil {
             kbuilder.add(ResourceFactory.newClassPathResource("rewards-basic.bpmn"), ResourceType.BPMN2);
             kbase = kbuilder.newKnowledgeBase();
 
-            // This class is need to be loaded outside of a transaction
+            // This class needs to be loaded outside of a transaction
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("org.jbpm.persistence.jpa");
 
             Environment env = KnowledgeBaseFactory.newEnvironment();

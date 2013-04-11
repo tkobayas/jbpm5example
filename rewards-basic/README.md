@@ -5,7 +5,7 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 - Human Task
 - Persistence
 - LocalTaskService and SyncWSHumanTaskHandler
-- new ksession per request pattern
+- ksession per request pattern
 - mvn building
 
 This application is so basic that it creates new ksession every time. I will write another examples for 'singleton ksession pattern' and 'ksession per process pattern'.  
