@@ -36,9 +36,9 @@ public class TaskBean implements TaskLocal {
         List<TaskSummary> list = localTaskService.getTasksAssignedAsPotentialOwner(actorId, "en-UK");
 
         System.out.println("retrieveTaskList by " + actorId);
-        for (TaskSummary task : list) {
-            System.out.println(" task.getId() = " + task.getId());
-        }
+//        for (TaskSummary task : list) {
+//            System.out.println(" task.getId() = " + task.getId());
+//        }
 
         localTaskService.dispose();
 

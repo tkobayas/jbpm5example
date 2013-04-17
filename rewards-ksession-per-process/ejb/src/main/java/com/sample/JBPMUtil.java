@@ -44,10 +44,14 @@ public class JBPMUtil {
         UserGroupCallbackManager.getInstance().setCallback(new DefaultUserGroupCallbackImpl());
     }
 
-    public static int getSessionIdByProcessInstanceId(long processInstanceId) {
-        System.out.println(processInstanceId);
-        int sessionId = processSessionIdMap.get(processInstanceId);
-        return sessionId;
+    public static int getSessionIdByProcessInstanceId(long processInstanceId) throws ProcessOperationException {
+        if (!processSessionIdMap.containsKey(processInstanceId)) {
+            throw new ProcessOperationException(
+                    "processSessionIdMap doesn't contain processInstanceId : "
+                            + processInstanceId
+                            + " You have to persist processSessionIdMap in order to keep the relationship beyond server restart.");
+        }
+        return processSessionIdMap.get(processInstanceId);
     }
 
     public static void putSessionId(long processInstanceId, int sessionId) {
