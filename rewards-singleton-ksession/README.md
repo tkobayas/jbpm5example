@@ -8,7 +8,7 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 - singleton ksession pattern
 - mvn building
 
-This application is an example of 'singleton ksession pattern'. As LocalTaskService is not thread-safe, each method is required to synchronize the use of localTaskService. You may encapsulate the logic with a utility class.
+This application is an example of 'singleton ksession pattern'. As LocalTaskService is not thread-safe (while ksession is thread-safe), each method is required to be synchronized. I have encapsulated the logic into JbpmUtil class.
 
 ### Steps to run
 - Start BRMS 5.3.1 standalone
