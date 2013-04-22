@@ -24,8 +24,10 @@ import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
+import org.jbpm.task.Group;
 import org.jbpm.task.OrganizationalEntity;
 import org.jbpm.task.PeopleAssignments;
+import org.jbpm.task.Status;
 import org.jbpm.task.Task;
 import org.jbpm.task.TaskService;
 import org.jbpm.task.User;
@@ -74,6 +76,14 @@ public class TaskBean implements TaskLocal {
             ksession = createKnowledgeSession();
             LocalTaskService localTaskService = getTaskService(ksession);
             System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
+            
+            Task task = localTaskService.getTask(taskId);
+            
+            if (task.getTaskData().getStatus() == Status.Ready) {
+                // Claim first
+                localTaskService.claim(taskId, actorId);
+            }
+            
             localTaskService.start(taskId, actorId);
             localTaskService.complete(taskId, actorId, null);
 
@@ -150,9 +160,31 @@ public class TaskBean implements TaskLocal {
             List<OrganizationalEntity> newPotentialOwners = new ArrayList<OrganizationalEntity>();
             PeopleAssignments pa = task.getPeopleAssignments();
             System.out.println("setNewPotentialOwners : old = " + pa.getPotentialOwners());
-            newPotentialOwners.add(new User("Jabba Hutt"));
+            //newPotentialOwners.add(new User("Jabba Hutt"));
             newPotentialOwners.add(new User("mary"));
             pa.setPotentialOwners(newPotentialOwners);
+            
+            if (newPotentialOwners.size() == 1) {
+                // if there is a single potential owner, assign and set status to Reserved
+                OrganizationalEntity potentialOwner = newPotentialOwners.get(0);
+                // if there is a single potential user owner, assign and set status to Reserved
+                if (potentialOwner instanceof User) {
+                    task.getTaskData().setActualOwner((User) potentialOwner);
+
+                    task.getTaskData().setStatus(Status.Reserved);
+                }
+                //If there is a group set as potentialOwners, set the status to Ready ??
+                if (potentialOwner instanceof Group) {
+
+                    task.getTaskData().setStatus(Status.Ready);
+                }
+            } else if (newPotentialOwners.size() > 1) {
+                // multiple potential owners, so set to Ready so one can claim.
+                task.getTaskData().setStatus(Status.Ready);
+            } else {
+                throw new RuntimeException("You should have potential owners");
+            }
+            
             System.out.println("setNewPotentialOwners : new = " + pa.getPotentialOwners());
 
             ut.commit();
@@ -167,10 +199,10 @@ public class TaskBean implements TaskLocal {
             LocalTaskService localTaskService2 = getTaskService();
             System.out.println("--- querying ---");
             Task task = localTaskService2.getTask(taskId);
+            System.out.println("task.getTaskData().getStatus() = " + task.getTaskData().getStatus());
             System.out.println("setNewPotentialOwners : confirm = " + task.getPeopleAssignments().getPotentialOwners());
         }
 
         return;
     }
-
 }

@@ -17,21 +17,21 @@
     <!-- nodes -->
     <startEvent id="_1" name="Start" />
     <endEvent id="_3" name="End" >
-        <terminateEventDefinition/>
+        <terminateEventDefinition />
     </endEvent>
     <userTask id="_4" name="Approval by PM" >
       <ioSpecification>
         <dataInput id="_4_CommentInput" name="Comment" />
         <dataInput id="_4_SkippableInput" name="Skippable" />
-        <dataInput id="_4_ContentInput" name="Content" />
         <dataInput id="_4_TaskNameInput" name="TaskName" />
+        <dataInput id="_4_ContentInput" name="Content" />
         <dataInput id="_4_GroupIdInput" name="GroupId" />
         <dataInput id="_4_PriorityInput" name="Priority" />
         <inputSet>
           <dataInputRefs>_4_CommentInput</dataInputRefs>
           <dataInputRefs>_4_SkippableInput</dataInputRefs>
-          <dataInputRefs>_4_ContentInput</dataInputRefs>
           <dataInputRefs>_4_TaskNameInput</dataInputRefs>
+          <dataInputRefs>_4_ContentInput</dataInputRefs>
           <dataInputRefs>_4_GroupIdInput</dataInputRefs>
           <dataInputRefs>_4_PriorityInput</dataInputRefs>
         </inputSet>
@@ -53,17 +53,17 @@
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
-        <targetRef>_4_ContentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_4_ContentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
         <targetRef>_4_TaskNameInput</targetRef>
         <assignment>
           <from xsi:type="tFormalExpression">Approval by PM</from>
           <to xsi:type="tFormalExpression">_4_TaskNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_ContentInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_4_ContentInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -83,11 +83,6 @@
       <potentialOwner>
         <resourceAssignmentExpression>
           <formalExpression>john</formalExpression>
-        </resourceAssignmentExpression>
-      </potentialOwner>
-      <potentialOwner>
-        <resourceAssignmentExpression>
-          <formalExpression> mary</formalExpression>
         </resourceAssignmentExpression>
       </potentialOwner>
     </userTask>

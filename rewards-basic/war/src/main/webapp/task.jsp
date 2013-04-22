@@ -11,14 +11,17 @@
 <th>Task Name</th>
 <th>Task Id</th>
 <th>ProcessInstance Id</th>
+<th>Status</th>
 <th>Action</th>
 <% for (TaskSummary task : (List<TaskSummary>)request.getAttribute("taskList")) { %>
 <tr>
 <td><%= task.getName() %></td>
 <td><%= task.getId() %></td>
 <td><%= task.getProcessInstanceId() %></td>
+<td><%= task.getStatus() %></td>
 <!-- <td><a href="task?user=<%= user %>&taskId=<%= task.getId() %>&cmd=approve">Approve</a></td>  -->
 <td><a href="task?user=<%= user %>&taskId=<%= task.getId() %>&cmd=newPO">newPO</a></td>
+<td><a href="task?user=<%= user %>&taskId=<%= task.getId() %>&cmd=approve">approve</a></td>
 </tr>
 <% } %>
 </table>
