@@ -85,6 +85,7 @@ public class JBPMUtil {
     }
 
     public static StatefulKnowledgeSession getSession(int sessionId, EntityManagerFactory emf) throws Exception {
+        // protect ksession from multithread access
         for (int i = 0; i < 5; i++) {
             synchronized (inUseSessionIdMap) {
                 if (!inUseSessionIdMap.contains(sessionId)) {
@@ -129,6 +130,9 @@ public class JBPMUtil {
      */
     public static LocalTaskService getLocalTaskServiceBySessionId(int sessionId) {
 
+        // you may need 'inUseLocalTaskServiceMap' like inUseSessionIdMap to be
+        // more defensive but I assume caller always uses this method with
+        // JBPMUtil.getSession() in this example.
         LocalTaskService localTaskService = sessionIdLocalTaskServiceMap.get(sessionId);
 
         if (localTaskService == null) {
