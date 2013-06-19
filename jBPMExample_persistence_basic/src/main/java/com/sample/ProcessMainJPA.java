@@ -94,6 +94,9 @@ public class ProcessMainJPA {
 //        setupDataSource();
         
         UserGroupCallbackManager.getInstance().setCallback(new DefaultUserGroupCallbackImpl());
+        
+        Map<String, String> map = new HashMap<String, String>();
+        emf = Persistence.createEntityManagerFactory("org.jbpm.persistence.jpa", map);
     }
     
     public static PoolingDataSource setupDataSource() {
@@ -117,8 +120,6 @@ public class ProcessMainJPA {
 
     public static StatefulKnowledgeSession loadStatefulKnowledgeSession(KnowledgeBase kbase, int sessionId) {
         StatefulKnowledgeSession ksession;
-        Map<String, String> map = new HashMap<String, String>();
-        emf = Persistence.createEntityManagerFactory("org.jbpm.persistence.jpa", map);
         Environment env = EnvironmentFactory.newEnvironment();
         env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
         env.set(EnvironmentName.TRANSACTION_MANAGER, TransactionManagerServices.getTransactionManager());
