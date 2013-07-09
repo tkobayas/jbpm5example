@@ -134,8 +134,8 @@ public class ProcessMainJPA {
     }
 
     private static LocalTaskService getTaskServiceAndRegisterHumanTaskHandler(StatefulKnowledgeSession ksession) {
-        TaskService taskeService = new TaskService(emf, SystemEventListenerFactory.getSystemEventListener());
-        LocalTaskService localTaskService = new LocalTaskService(taskeService);
+        TaskService taskService = new TaskService(emf, SystemEventListenerFactory.getSystemEventListener());
+        LocalTaskService localTaskService = new LocalTaskService(taskService);
 
         SyncWSHumanTaskHandler humanTaskHandler = new SyncWSHumanTaskHandler(localTaskService, ksession);
         humanTaskHandler.setLocal(true);
