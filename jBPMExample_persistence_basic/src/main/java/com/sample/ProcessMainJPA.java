@@ -19,6 +19,7 @@ import org.drools.runtime.Environment;
 import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
+import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.DefaultUserGroupCallbackImpl;
@@ -47,6 +48,7 @@ public class ProcessMainJPA {
         // create ksession/localTaskService
         StatefulKnowledgeSession ksession = newStatefulKnowledgeSession(kbase);
         LocalTaskService localTaskService = getTaskServiceAndRegisterHumanTaskHandler(ksession);
+        new JPAWorkingMemoryDbLogger(ksession);
         
         // start a new process instance
         Map<String,Object> params = new HashMap<String, Object>();
