@@ -8,12 +8,12 @@ This is a basic jBPM5 web application, which aims to provide an example usage of
 - ksession per request pattern
 - mvn building
 
-This application is so basic that it creates new ksession every time. I will write another examples for 'singleton ksession pattern' and 'ksession per process pattern'.  
+This application implements 'ksession per request' pattern. You will find "rewards-ksession-per-process" project for 'ksession per process instance pattern' and "rewards-singleton-ksession" for 'singleton (active) ksession' pattern.
 
-Currently these projects are focusing on JBoss BRMS 5.3.1. I may add some branches for other versions (e.g. jBPM 5.4.0)
+Currently these projects are focusing on JBoss BRMS 5.3.1.
 
 For repository setup, please refer to https://github.com/tkobayas/jbpm5example/blob/master/README.md
-* BUT * I have removed the local repository dependency for BRMS jars from this project. There are referenced by <systemPath> now. So you don't have to set up repository.
+BUT I have removed the local repository dependency for BRMS jars from this project. There are referenced by <systemPath> now. So you don't have to set up repository.
 
 ### Steps to run
 - Start BRMS 5.3.1 standalone
