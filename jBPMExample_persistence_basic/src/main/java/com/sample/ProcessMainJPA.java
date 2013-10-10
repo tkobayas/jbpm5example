@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.SystemException;
 
 import org.drools.KnowledgeBase;
 import org.drools.SystemEventListenerFactory;
@@ -28,6 +29,7 @@ import org.jbpm.task.service.UserGroupCallbackManager;
 import org.jbpm.task.service.local.LocalTaskService;
 import org.jbpm.test.JBPMHelper;
 
+import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 
@@ -87,7 +89,7 @@ public class ProcessMainJPA {
         return kbuilder.newKnowledgeBase();
     }
 
-    private static void setup() {
+    private static void setup() throws SystemException {
         // for H2
         JBPMHelper.startH2Server();
         JBPMHelper.setupDataSource();
@@ -99,6 +101,9 @@ public class ProcessMainJPA {
         
         Map<String, String> map = new HashMap<String, String>();
         emf = Persistence.createEntityManagerFactory("org.jbpm.persistence.jpa", map);
+        
+        BitronixTransactionManager transactionManager = TransactionManagerServices.getTransactionManager();
+        transactionManager.setTransactionTimeout(3600); // longer timeout for a debugger
     }
     
     public static PoolingDataSource setupDataSource() {
