@@ -31,8 +31,12 @@ import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.PermissionDeniedException;
 import org.jbpm.task.service.local.LocalTaskService;
 
+import org.jbpm.persistence.JpaProcessPersistenceContextManager;
+import org.jbpm.persistence.jta.ContainerManagedTransactionManager;
+
+
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class TaskBean implements TaskLocal {
 
     private static KnowledgeBase kbase;
@@ -40,8 +44,6 @@ public class TaskBean implements TaskLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
 
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception {
 
@@ -57,7 +59,7 @@ public class TaskBean implements TaskLocal {
             System.out.println(" task.getId() = " + task.getId());
         }
 
-        ksession.dispose();
+        //        ksession.dispose();
 
         return list;
     }
@@ -69,7 +71,6 @@ public class TaskBean implements TaskLocal {
         StatefulKnowledgeSession ksession = createKnowledgeSession();
         TaskService localTaskService = getTaskService(ksession);
 
-        ut.begin();
 
         try {
             System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
@@ -78,34 +79,16 @@ public class TaskBean implements TaskLocal {
 
             //Thread.sleep(10000); // To test OptimisticLockException
 
-            ut.commit();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-            Throwable cause = e.getCause();
-            if (cause != null && cause instanceof OptimisticLockException) {
-                // Concurrent access to the same process instance
-                throw new ProcessOperationException("The same process instance has likely been accessed concurrently",
-                        e);
-            }
-            throw new RuntimeException(e);
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
-            // Transaction might be already rolled back by TaskServiceSession
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
             // Probably the task has already been started by other users
             throw new ProcessOperationException("The task (id = " + taskId
                     + ") has likely been started by other users ", e);
         } catch (Exception e) {
             e.printStackTrace();
-            // Transaction might be already rolled back by TaskServiceSession
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
             throw new RuntimeException(e);
         } finally {
-            ksession.dispose();
+            //            ksession.dispose();
         }
 
         return;
@@ -114,6 +97,8 @@ public class TaskBean implements TaskLocal {
     private StatefulKnowledgeSession createKnowledgeSession() {
         Environment env = KnowledgeBaseFactory.newEnvironment();
         env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
+        env.set(EnvironmentName.TRANSACTION_MANAGER, new ContainerManagedTransactionManager());
+        env.set(EnvironmentName.PERSISTENCE_CONTEXT_MANAGER, new JpaProcessPersistenceContextManager(env));
 
         StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
 

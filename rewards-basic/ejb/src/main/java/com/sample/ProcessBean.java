@@ -30,17 +30,18 @@ import org.jbpm.task.service.DefaultUserGroupCallbackImpl;
 import org.jbpm.task.service.UserGroupCallbackManager;
 import org.jbpm.task.service.local.LocalTaskService;
 
+import org.jbpm.persistence.JpaProcessPersistenceContextManager;
+import org.jbpm.persistence.jta.ContainerManagedTransactionManager;
+
+
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class ProcessBean implements ProcessLocal {
 
     private static KnowledgeBase kbase;
 
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
-
-    @Resource
-    private UserTransaction ut;
 
     public long startProcess(String recipient) throws Exception {
 
@@ -54,8 +55,6 @@ public class ProcessBean implements ProcessLocal {
 
         long processInstanceId = -1;
 
-        ut.begin();
-
         try {
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
@@ -66,15 +65,11 @@ public class ProcessBean implements ProcessLocal {
 
             System.out.println("Process started ... : processInstanceId = " + processInstanceId);
 
-            ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            if (ut.getStatus() == Status.STATUS_ACTIVE) {
-                ut.rollback();
-            }
             throw e;
         } finally {
-            ksession.dispose();
+            //            ksession.dispose();
         }
 
         return processInstanceId;
@@ -83,6 +78,8 @@ public class ProcessBean implements ProcessLocal {
     private StatefulKnowledgeSession createKnowledgeSession() {
         Environment env = KnowledgeBaseFactory.newEnvironment();
         env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
+        env.set(EnvironmentName.TRANSACTION_MANAGER, new ContainerManagedTransactionManager());
+        env.set(EnvironmentName.PERSISTENCE_CONTEXT_MANAGER, new JpaProcessPersistenceContextManager(env));
 
         StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
 

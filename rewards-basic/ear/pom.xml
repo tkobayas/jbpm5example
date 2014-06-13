@@ -16,148 +16,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-ear-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
-          <displayName>rewards-basic</displayName>
-          <modules>
-            <ejbModule>
-              <groupId>org.example</groupId>
-              <artifactId>rewards-basic-ejb</artifactId>
-            </ejbModule>
-            <webModule>
-              <groupId>org.example</groupId>
-              <artifactId>rewards-basic-war</artifactId>
-              <contextRoot>rewards-basic</contextRoot>
-            </webModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>knowledge-api</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>drools-core</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.mvel</groupId>
-              <artifactId>mvel2</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>com.thoughtworks.xstream</groupId>
-              <artifactId>xstream</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>drools-compiler</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.eclipse.jdt.core.compiler</groupId>
-              <artifactId>ecj</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.antlr</groupId>
-              <artifactId>antlr-runtime</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>drools-decisiontables</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>drools-templates</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.drools</groupId>
-              <artifactId>drools-persistence-jpa</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-
-            <jarModule>
-              <groupId>net.sourceforge.jexcelapi</groupId>
-              <artifactId>jxl</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>com.google.protobuf</groupId>
-              <artifactId>protobuf-java</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-
-
-
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-flow</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-flow-builder</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-bam</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-bpmn2</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-human-task</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-persistence-jpa</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-            <jarModule>
-              <groupId>org.jbpm</groupId>
-              <artifactId>jbpm-workitems</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/lib</bundleDir>
-            </jarModule>
-
-          </modules>
-          <jboss>
-            <loader-repository>
-              example.com:loader=rewards-basic
-            </loader-repository>
-            <loader-repository-config>
-              java2ParentDelegation=false
-            </loader-repository-config>
-          </jboss>
+            <version>5</version>
+            <defaultLibBundleDir>lib</defaultLibBundleDir>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 
@@ -174,5 +39,12 @@
       <version>1.0-SNAPSHOT</version>
       <type>war</type>
     </dependency>
+
+    <!-- <dependency> -->
+    <!--   <groupId>org.drools</groupId> -->
+    <!--   <artifactId>knowledge-api</artifactId> -->
+    <!--   <version>5.3.1.BRMS</version> -->
+    <!-- </dependency> -->
+
   </dependencies>
 </project>
