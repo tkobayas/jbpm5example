@@ -8,7 +8,7 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="http://java.sun.com/xml/ns/persistence">
 
-  <persistence-unit name="org.jbpm.persistence.jpa" transaction-type="JTA">
+  <persistence-unit name="org.jbpm.persistence.jpa" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <jta-data-source>DefaultDatasource</jta-data-source>        
     <mapping-file>META-INF/JBPMorm.xml</mapping-file>
@@ -50,7 +50,8 @@
       <property name="hibernate.show_sql" value="false" />	
 
 <property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.CMTTransactionFactory"/>
-<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WebSphereExtendedJTATransactionLookup"/>
+<!-- <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WebSphereExtendedJTATransactionLookup"/> -->
+<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WebSphereTransactionManagerLookup"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
 	  <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/> -->
     </properties>        
