@@ -42,6 +42,9 @@ public class ProcessBean implements ProcessLocal {
 
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
+    
+    @PersistenceUnit(unitName = "org.jbpm.persistence.task")
+    private EntityManagerFactory emfTask;
 
     public long startProcess(String recipient) throws Exception {
 
@@ -85,7 +88,7 @@ public class ProcessBean implements ProcessLocal {
 
         new JPAWorkingMemoryDbLogger(ksession);
 
-        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
+        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emfTask,
                 SystemEventListenerFactory.getSystemEventListener());
 
         LocalTaskService localTaskService = new LocalTaskService(taskService);

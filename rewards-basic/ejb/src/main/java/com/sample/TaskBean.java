@@ -44,6 +44,8 @@ public class TaskBean implements TaskLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
+    @PersistenceUnit(unitName = "org.jbpm.persistence.task")
+    private EntityManagerFactory emfTask;
 
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception {
 
@@ -109,7 +111,7 @@ public class TaskBean implements TaskLocal {
 
     private TaskService getTaskService(StatefulKnowledgeSession ksession) {
 
-        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
+        org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emfTask,
                 SystemEventListenerFactory.getSystemEventListener());
 
         LocalTaskService localTaskService = new LocalTaskService(taskService);
