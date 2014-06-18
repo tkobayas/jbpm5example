@@ -3,7 +3,10 @@ package com.sample;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManagerFactory;
@@ -28,7 +31,6 @@ import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.local.LocalTaskService;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
 public class TaskBean implements TaskLocal {
 
     private static KnowledgeBase kbase;
@@ -36,49 +38,42 @@ public class TaskBean implements TaskLocal {
     @PersistenceUnit(unitName = "org.jbpm.persistence.jpa")
     private EntityManagerFactory emf;
 
-    @Resource
-    private UserTransaction ut;
-
+    @EJB
+    private TxTaskLocal txTaskBean;
+    
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<TaskSummary> retrieveTaskList(String actorId) throws Exception {
 
         kbase = readKnowledgeBase();
 
         StatefulKnowledgeSession ksession = createKnowledgeSession();
-        TaskService localTaskService = getTaskService(ksession);
+        LocalTaskService localTaskService = getTaskService(ksession);
 
-        List<TaskSummary> list = localTaskService.getTasksAssignedAsPotentialOwner(actorId, "en-UK");
-
-        System.out.println("retrieveTaskList by " + actorId);
-        for (TaskSummary task : list) {
-            System.out.println(" task.getId() = " + task.getId());
-        }
+        List<TaskSummary> list = txTaskBean.retrieveTaskList(actorId, ksession, localTaskService);
 
         ksession.dispose();
+        localTaskService.dispose();
 
         return list;
     }
 
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void approveTask(String actorId, long taskId) throws Exception {
 
         kbase = readKnowledgeBase();
 
         StatefulKnowledgeSession ksession = createKnowledgeSession();
-        TaskService localTaskService = getTaskService(ksession);
-
-        ut.begin();
+        LocalTaskService localTaskService = getTaskService(ksession);
 
         try {
-            System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
-            localTaskService.start(taskId, actorId);
-            localTaskService.complete(taskId, actorId, null);
+            txTaskBean.approveTask(actorId, taskId, ksession, localTaskService);
 
-            ut.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            ut.rollback();
             throw e;
         } finally {
             ksession.dispose();
+            localTaskService.dispose();
         }
 
         return;
@@ -95,7 +90,7 @@ public class TaskBean implements TaskLocal {
         return ksession;
     }
 
-    private TaskService getTaskService(StatefulKnowledgeSession ksession) {
+    private LocalTaskService getTaskService(StatefulKnowledgeSession ksession) {
 
         org.jbpm.task.service.TaskService taskService = new org.jbpm.task.service.TaskService(emf,
                 SystemEventListenerFactory.getSystemEventListener());
