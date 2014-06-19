@@ -2,30 +2,11 @@ package com.sample;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.transaction.UserTransaction;
 
-import org.drools.KnowledgeBase;
-import org.drools.KnowledgeBaseFactory;
-import org.drools.SystemEventListenerFactory;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.io.ResourceFactory;
-import org.drools.persistence.jpa.JPAKnowledgeService;
-import org.drools.runtime.Environment;
-import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.jbpm.process.audit.JPAWorkingMemoryDbLogger;
-import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
-import org.jbpm.task.TaskService;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.local.LocalTaskService;
 
@@ -49,9 +30,15 @@ public class TxTaskBean implements TxTaskLocal {
     public void approveTask(String actorId, long taskId, StatefulKnowledgeSession ksession,
             LocalTaskService localTaskService) throws Exception {
 
-        System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
-        localTaskService.start(taskId, actorId);
-        localTaskService.complete(taskId, actorId, null);
+        try {
+            System.out.println("approveTask (taskId = " + taskId + ") by " + actorId);
+            localTaskService.start(taskId, actorId);
+            localTaskService.complete(taskId, actorId, null);
+        } catch (RuntimeException re) {
+            // BZ1082128 you want to log RuntimeException here just in case
+            re.printStackTrace();
+            throw re;
+        }
 
         return;
     }
